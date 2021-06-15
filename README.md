@@ -1,8 +1,8 @@
 # npg-mailer
 Instrukcja obsługi:
-1. 1.Pobierasz plik zlote-mysli.txt
-1. 2.Uruchamiasz program za pomocą linii poleceń.
-1. 3.Cieszysz się codzienną dawką pozytywnej energii!!!
+1. Pobierasz plik zlote-mysli.txt
+1. Uruchamiasz program za pomocą linii poleceń.
+1. Cieszysz się codzienną dawką pozytywnej energii!!!
 ```
 python email_sender.py mail_adresata godzina_codziennego_wysyłania
 ```
