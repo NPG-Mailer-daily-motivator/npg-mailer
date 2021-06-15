@@ -1,12 +1,12 @@
-import schedule                     #z tego jest job plus co jaki czas wysyłamy
+import yagmail
 import requests
-from bs4 import BeautifulSoup       #oba do wyciągania danych ze strony
+from bs4 import BeautifulSoup
+import random
+import schedule
+import time
 
 
 def job():
-
-    #losowanie cytatu z pliku plus usunięcie go z listy
-
     czas = str(time.strftime("%Y-%m-%d", time.localtime()) )
     
     ilosc_linii = sum(1 for line in open('zlote-mysli.txt'))
@@ -25,10 +25,10 @@ def job():
     mysli_plik_wrt.close()
 
 
-    #pobieranie wartości bitcoina i cdr ze stron
-
     url1 = 'https://www.coindesk.com/price/bitcoin'
     url2 = 'https://finance.yahoo.com/quote/OTGLF/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAJaDrr-Iotdmj928Ob6Fv40VQIjNirHQlPbzWcRqbFzjqgU6Zve906qozRuGgjUC5uwlWpDd2oSP9k7T23c23NA9ukP3d9qFLL8EKa5IMMRmzAoHqgNIO68dTy6Lumv0bPy7SBdErYhU9SsbykES7GcSQpdpT5o5qcGmXqF12OiR'
+
+    yag = yagmail.SMTP('npg.daily.motivator@gmail.com')
 
     r1 = requests.get(url1, headers={'user-agent': 'npg.daily.motivator.pl'})
     soup1 = BeautifulSoup(r1.text, "lxml")
@@ -43,5 +43,26 @@ def job():
     div2 = body2.find('span', {'class': 'Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)'})
 
     project_red_act_value = div2.get_text()
-    project_red_17Sep_value = 109.00        #wartość z dnia przed premiery
+    project_red_17Sep_value = 109.00
     project_red_diff = str(project_red_17Sep_value - float(project_red_act_value))
+
+    contents = [
+        
+        "Witaj, \n"
+        "Twoja złota myśl na dziś: \n",
+        random_mysl,
+        "\n"
+        "Dzisiejsza wartość bitcoina to " + bitcoin,
+        "A akcje Cd projekt red to $" + project_red_act_value + " czyli jest o $" + project_red_diff + " mniej od premiery Cyberpunk 2077 \n"
+        "Smacznej Kawusi!"
+    ]
+
+    yagmail.SMTP('npg.daily.motivator@gmail.com').send('npg.daily.motivator@gmail.com', 'Twój daily motivator - '+ czas, contents)
+
+    return
+
+schedule.every().day.at("08:00").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(10)
